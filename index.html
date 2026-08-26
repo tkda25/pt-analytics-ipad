@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PT Analytics v30.0 iPad</title>
+  <link rel="stylesheet" href="style.css?v=30-ipad-0826a" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js?v=27-0826a"></script>
+<style id="v24-critical">
+.compat-hidden{display:none!important}
+.view-title-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.view-client-name{font-size:18px;font-weight:800;color:#71839d}
+.build-marker{font-size:10px;font-weight:700;color:#9aa8ba;margin-left:4px}
+.legacy-client-profile{display:none!important}
+#trainingChartsSection,.card:has(#ormChart),.card:has(#volumeChart){display:none!important}
+</style></head>
+<body>
+    <section id="authGate" class="auth-gate">
+    <div class="auth-card">
+      <div class="auth-brand">🏋️ PT Analytics</div>
+      <h1>クラウドログイン</h1>
+      <p>iPhone・iPad・PCで同じデータを使えます。</p>
+      <form id="authForm">
+        <label>メールアドレス<input id="authEmail" type="email" autocomplete="email" required></label>
+        <label>パスワード<input id="authPassword" type="password" autocomplete="current-password" minlength="6" required></label>
+        <div class="auth-actions">
+          <button type="submit" class="primary">ログイン</button>
+          <button type="button" id="signupBtn" class="secondary-btn">新規登録</button>
+        </div>
+        <p id="authMessage" class="auth-message"></p>
+      </form>
+    </div>
+  </section>
+
+  <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="メニューを開く">☰</button>
+  <div id="sidebarBackdrop" class="sidebar-backdrop" hidden></div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar"><button id="mobileMenuClose" class="mobile-menu-close" aria-label="メニューを閉じる">×</button>
+      <div class="brand">🏋️ <span>PT Analytics</span></div>
+      <nav>
+        <button class="nav-item active" data-view="dashboard">ダッシュボード</button>
+        <button class="nav-item" data-view="clients">クライアント一覧</button>
+        <button class="nav-item" data-view="training">トレーニング</button>
+        <button class="nav-item" data-view="body">身体データ</button>
+        <button class="nav-item" data-view="condition">生活・コンディション</button>
+        <button class="nav-item" data-view="report">レポート</button>
+      </nav>
+        <div class="sidebar-tools">
+          <div class="sidebar-tools-label">設定</div>
+          <button type="button" class="sidebar-tool-btn" id="menuBackupBtn">バックアップ</button>
+          <button type="button" class="sidebar-tool-btn" id="menuAccountBtn">アカウント</button>
+          <button type="button" class="sidebar-tool-btn danger" id="menuResetBtn">初期化</button>
+        </div>
+    </aside>
+
+    <main>
+      <div class="view-heading">
+        <p class="eyebrow">MENU <small class="build-marker">v30.0 iPad</small></p>
+        <div class="view-title-row">
+          <h2 id="viewTitle">ダッシュボード</h2>
+          <span id="viewClientName" class="view-client-name">未登録</span>
+        </div>
+      </div>
+
+      <!-- 互換用。画面には出しません -->
+      <div class="compat-hidden" aria-hidden="true">
+        <h1 id="clientTitle">未登録</h1>
+        <input id="clientSearch" type="search">
+        <div id="clientSearchResults" hidden></div>
+        <button id="clientBtn" type="button"></button>
+      </div>
+
+      <section class="training-calendar-section" id="trainingCalendarSection" data-section="training">
+        <article class="card">
+          <div class="calendar-toolbar">
+            <button type="button" id="calendarPrevBtn" class="calendar-nav-btn" aria-label="前月">‹</button>
+            <div>
+              <h3>トレーニングカレンダー</h3>
+              <strong id="calendarMonthLabel"></strong>
+            </div>
+            <button type="button" id="calendarNextBtn" class="calendar-nav-btn" aria-label="次月">›</button>
+          </div>
+          <div class="calendar-weekdays"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
+          <div id="trainingCalendar" class="training-calendar"></div>
+          <div id="bodyPartLegend" class="bodypart-legend"></div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+  <h3 id="selectedTrainingDateTitle">日付を選択</h3>
+  <div class="selected-day-actions"><span id="selectedDayVolume"></span><button type="button" id="calendarAddTrainingBtn" class="calendar-add-btn" aria-label="トレーニングを追加" hidden>＋</button></div>
+</div>
+          <div id="selectedTrainingDayDetails" class="selected-training-day-details">
+            <div class="calendar-empty">日付をタップすると、その日のトレーニングが表示されます。</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head"><h3>今月の部位別ボリューム</h3><span>kg</span></div>
+          <div id="bodyPartVolumeGrid" class="bodypart-volume-grid"></div>
+        </article>
+      </section>
+
+      <section class="profile-card card legacy-client-profile" id="clientsSection">
+        <div>
+          <h2><span id="clientName">未登録</span> <span class="badge">アクティブ</span></h2>
+          <p id="clientMeta">クライアントを登録してください</p>
+          <p id="clientGoal">目標：未登録</p>
+        </div>
+        <div id="noClientState" class="no-client-state" hidden>
+          <strong>クライアント未登録</strong>
+          <span>「＋ 新規クライアント」または「クライアント管理」から登録してください。</span>
+        </div>
+        <div class="quick-actions">
+          <button data-open="training">＋ トレーニング記録</button>
+          <button data-open="body">＋ 身体データ</button>
+        </div>
+      </section>
+
+      <section class="card client-list-card" id="clientListPanel" data-section="clients">
+        <div class="card-head"><h3>クライアント一覧</h3><span id="clientCountLabel">0名</span></div>
+        <div class="client-list-toolbar">
+          <input id="clientListSearch" type="search" placeholder="名前で検索">
+          <button id="addClientShortcut" class="secondary-btn">＋ 新規クライアント</button>
+        </div>
+        <div id="clientListAlphabetHint" class="client-list-alphabet-hint">あいうえお順</div><div id="clientList" class="client-list"></div>
+      </section>
+
+
+      <section class="kpis" id="kpiGrid" data-section="dashboard"></section>
+      <section class="card previous-training-card" id="previousTrainingCard" data-section="dashboard">
+        <div class="card-head"><h3>前回トレーニング</h3><span id="previousTrainingDate">—</span></div>
+        <div id="previousTrainingContent" class="previous-training-content"><div class="empty-state">まだトレーニング記録がありません</div></div>
+      </section>
+      <section class="comparison-strip card" id="comparisonStrip" data-section="dashboard"></section>
+
+      <section class="card progress-summary-card" id="progressSummary" data-section="dashboard">
+        <div class="card-head"><h3>進捗サマリー</h3><span id="progressPeriodLabel">直近3ヶ月</span></div>
+        <div class="progress-summary-grid" id="progressSummaryGrid"></div>
+      </section>
+
+
+      <section class="view-actionbar" data-section="body">
+        <div><strong>身体データ</strong><span>体重・水分・睡眠・歩数・体調を記録</span></div>
+        <button class="primary" data-open="body">＋ 身体データ</button>
+      </section>
+      <section class="grid two" id="bodySection" data-section="body">
+        <article class="card chart-card">
+          <div class="card-head"><h3>体重の推移</h3><span>kg</span></div>
+          <svg id="weightChart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg>
+        </article>
+        <article class="card chart-card">
+          <div class="card-head"><h3>水分摂取量の推移</h3><span>L / 日</span></div>
+          <svg id="waterChart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg>
+        </article>
+      </section>
+      <section class="grid two" id="conditionSection" data-section="condition">
+        <article class="card chart-card">
+          <div class="card-head"><h3>睡眠時間の推移</h3><span>h / 日</span></div>
+          <svg id="sleepChart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg>
+        </article>
+        <article class="card chart-card">
+          <div class="card-head"><h3>歩数の推移</h3><span>steps / 日</span></div>
+          <svg id="stepsChart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg>
+        </article>
+      </section>
+
+      
+      <section class="card exercise-progress-card" id="exerciseProgressSection" data-section="training">
+        <div class="card-head exercise-progress-head">
+      <h3>種目別の成長</h3>
+      <div class="progress-controls">
+        <select id="progressExerciseSelect" class="compact-select"></select>
+        <select id="progressRangeSelect" class="compact-select">
+          <option value="30">1ヶ月</option>
+          <option value="90" selected>3ヶ月</option>
+        </select>
+      </div>
+    </div>
+        <div id="prBanner" class="pr-banner" hidden>🏆 自己ベスト更新</div>
+        <div class="exercise-progress-grid">
+          <div class="mini-stat"><span>最高重量</span><strong id="progressBestWeight">—</strong></div>
+          <div class="mini-stat"><span>直近重量</span><strong id="progressLatestWeight">—</strong></div>
+          <div class="mini-stat"><span>記録数</span><strong id="progressRecordCount">—</strong></div>
+          <div class="mini-stat"><span>前回比 重量</span><strong id="progressWeightChange">—</strong></div>
+          <div class="mini-stat"><span>前回比 回数</span><strong id="progressRepsChange">—</strong></div>
+          <div class="mini-stat"><span>前回比 推定1RM</span><strong id="progressOrmChange">—</strong></div>
+          
+        </div>
+        <div class="grid two progress-charts">
+          <article class="chart-card inner-card"><div class="card-head"><h3>重量の推移</h3><span>kg</span></div><svg id="exerciseWeightChart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg></article>
+          <article class="chart-card inner-card"><div class="card-head"><h3>1日ごとのボリューム</h3><span>kg</span></div><svg id="exerciseVolumeChart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg></article>
+        </div>
+      </section>
+
+      <section class="grid one" id="trainingSection" data-section="training">
+        <article class="card">
+          <div class="card-head"><h3>トレーニング履歴</h3><span id="trainingHistoryClientName"></span><select id="exerciseFilter" class="compact-select"><option value="">全種目</option></select></div>
+           <div class="period-tabs" id="periodTabs"><button data-days="7">1週間</button><button data-days="30" class="active">1ヶ月</button><button data-days="90">3ヶ月</button><button data-days="0">全期間</button></div>
+          <div class="table-wrap"><table><thead><tr><th>日付</th><th>種目</th><th colspan="2">セット内容</th><th>推定1RM</th><th>操作</th></tr></thead><tbody id="trainingTable"></tbody></table></div>
+        </article>
+      </section>
+
+      <section class="grid one" id="conditionSummarySection" data-section="condition">
+        <article class="card">
+          <div class="card-head"><h3>直近7日コンディション</h3></div>
+          <div id="conditionSummary" class="condition-grid"></div>
+        </article>
+      </section>
+
+      <section class="grid one" id="bodyHistorySection" data-section="body">
+        <article class="card">
+          <div class="card-head"><h3>身体データ履歴</h3><span>最新20件</span></div>
+          <div class="table-wrap"><table><thead><tr><th>日付</th><th>体重</th><th>水分</th><th>睡眠</th><th>歩数</th><th>体調</th><th>操作</th></tr></thead><tbody id="bodyTable"></tbody></table></div>
+        </article>
+      </section>
+
+      <section class="grid one" id="reportSection" data-section="report">
+        <article class="card report-card" id="reportCard">
+          <div class="card-head"><h3>クライアントレポート</h3><span>現在の表示期間</span></div>
+          <div id="reportSummary" class="report-summary"></div><div id="reportMetrics" class="report-metrics"></div>
+          <div class="report-actions">
+            <button id="exportCsvBtn" class="secondary-btn">CSVを書き出す</button>
+            <button id="printReportBtn" class="secondary-btn">印刷 / PDF</button>
+          </div>
+        </article>
+      </section>
+
+    </main>
+  </div>
+
+  <dialog id="trainingDialog">
+    <form id="trainingForm" method="dialog">
+      <h2 id="trainingDialogTitle">トレーニングを記録</h2>
+      <input name="date" type="hidden" required>
+      <label>部位<select name="bodyPart" id="bodyPartSelect" required>
+        <option value="">選択してください</option>
+        <option value="胸">胸</option>
+        <option value="背中">背中</option>
+        <option value="肩">肩</option>
+        <option value="二頭">二頭</option>
+        <option value="三頭">三頭</option>
+        <option value="脚">脚</option>
+        <option value="腹筋">腹筋</option>
+        <option value="有酸素">有酸素</option>
+      </select></label>
+      <label>種目<select name="exercise" id="exerciseSelect"><option>ベンチプレス</option><option>スクワット</option><option>デッドリフト</option><option>ショルダープレス</option><option>ラットプルダウン</option></select></label><label>種目を追加<div class="inline-add"><input id="newExercise" placeholder="例：インクラインベンチ"><button type="button" id="addExerciseBtn">追加</button></div></label>
+      <div class="set-entry-head" aria-hidden="true">
+        <span>セット</span><span>kg</span><span>回数</span><span>1RM</span><span></span>
+      </div>
+      <div id="trainingSetRows" class="training-set-rows"></div>
+      <p class="set-entry-hint">重量と回数を入力して ✓ を押すと、次のセットが追加されます。</p>
+      <label>メモ<textarea name="note" rows="3" placeholder="フォーム・体調・指導メモなど"></textarea></label><p class="hint">推定1RMはRM換算表で計算します。例：115kg × 8回 → 約138.6kg、110kg × 10回 → 約137.5kg。</p>
+      <div class="dialog-actions"><button type="button" data-close>キャンセル</button><button class="primary" value="default">保存</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="bodyDialog">
+    <form id="bodyForm" method="dialog">
+      <h2 id="bodyDialogTitle">身体データを記録</h2>
+      <label>日付<input name="date" type="date" required></label>
+      <label>体重(kg)<input name="bodyWeight" type="number" step="0.1" required></label>
+      <div class="form-grid">
+        <label>水分量(L)<input name="water" type="number" step="0.1"></label>
+        <label>睡眠(時間)<input name="sleep" type="number" step="0.1"></label>
+      </div>
+      <div class="form-grid">
+        <label>歩数<input name="steps" type="number"></label>
+        <label>体調(10点)<input name="condition" type="number" min="1" max="10"></label>
+      </div>
+      <label>メモ<textarea name="note" rows="3" placeholder="体調・生活メモなど"></textarea></label>
+      <div class="dialog-actions"><button type="button" data-close>キャンセル</button><button class="primary" value="default">保存</button></div>
+    </form>
+  </dialog>
+
+
+  <dialog id="clientDialog">
+    <form id="clientForm" method="dialog">
+      <h2>クライアント管理</h2>
+      <label>クライアント<select id="clientSelect" name="clientSelect"></select></label>
+      <div class="form-grid"><label>名前<input name="name" required></label><label>年齢<input name="age" type="number" min="0"></label></div>
+      <div class="form-grid"><label>性別<select name="sex"><option>男性</option><option>女性</option><option>その他</option></select></label><label>身長(cm)<input name="height" type="number" step="0.1"></label></div>
+      <label>目標<input name="goal" placeholder="例：減量・筋力向上"></label>
+      <div class="dialog-actions split-actions"><button type="button" id="deleteClientBtn" class="danger-btn">クライアント削除</button><span></span><button type="button" id="newClientBtn">新規入力</button><button type="button" data-close>キャンセル</button><button class="primary" value="default">保存</button></div>
+    </form>
+  </dialog>
+
+
+  <dialog id="backupDialog">
+    <form method="dialog">
+      <h2>バックアップ</h2>
+      <p class="hint">この端末の全クライアント・トレーニング・身体データをJSONで保存できます。別端末で復元する場合もこのファイルを使います。</p>
+      <div class="backup-grid">
+        <button type="button" id="exportBackupBtn" class="primary">バックアップを書き出す</button>
+        <label class="file-label">バックアップを読み込む<input id="importBackupInput" type="file" accept=".json,application/json"></label>
+      </div>
+      <div class="dialog-actions"><button type="button" data-close>閉じる</button></div>
+    </form>
+  </dialog>
+
+    <dialog id="accountDialog">
+    <form method="dialog">
+      <h2>アカウント</h2>
+      <p id="accountEmail" class="hint"></p>
+      <div class="account-status"><span>保存先</span><strong>Supabase クラウド</strong></div>
+      <div class="account-status"><span>同期状態</span><strong id="cloudSyncStatus">確認中</strong></div>
+      <button type="button" id="migrateLocalBtn" class="secondary-btn" style="width:100%;margin-top:12px">この端末の旧データをクラウドへ移行</button>
+      <div class="dialog-actions"><button type="button" id="logoutBtn" class="danger-btn">ログアウト</button><button type="button" data-close>閉じる</button></div>
+    </form>
+  </dialog>
+
+  <script src="app.js?v=30-ipad-0826a"></script>
+</body>
+</html>
