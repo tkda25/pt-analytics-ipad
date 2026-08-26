@@ -546,226 +546,72 @@ body:not(.clients-view) #clientListPanel{display:none!important}
 }
 
 
-/* =========================================================
-   v30.0 iPad optimization
-   - iPhone keeps drawer UI
-   - iPad gets persistent sidebar and desktop-like dashboard
-   ========================================================= */
-
-/* iPad / tablet shared */
-@media (min-width:768px) and (max-width:1366px){
-  html,body{min-width:0;overflow-x:hidden}
-  body{padding-top:0!important}
-  .app-shell{
-    display:grid!important;
-    grid-template-columns:190px minmax(0,1fr)!important;
-    min-height:100vh;
-    align-items:start;
-  }
+/* ===== PT Analytics v31.0 — iPad dashboard density upgrade ===== */
+@media (min-width: 834px) and (max-width: 1366px) {
+  :root{--ipad-sidebar:176px}
+  body{background:#f4f7fb}
   .sidebar{
-    display:flex!important;
-    flex-direction:column;
-    position:sticky!important;
-    left:auto!important;
-    top:0!important;
-    bottom:auto!important;
-    width:auto!important;
-    height:100vh!important;
-    min-height:100vh;
+    width:var(--ipad-sidebar)!important;
     transform:none!important;
-    z-index:20!important;
-    padding:20px 12px 18px!important;
-    overflow-y:auto!important;
-    box-shadow:none!important;
+    box-shadow:8px 0 28px rgba(10,25,55,.08);
   }
-  .brand{
-    display:flex!important;
-    align-items:center;
-    gap:7px;
-    padding:5px 6px 20px!important;
-    font-size:18px!important;
-    white-space:nowrap;
+  .main{
+    margin-left:var(--ipad-sidebar)!important;
+    width:calc(100% - var(--ipad-sidebar))!important;
+    padding:18px 20px 28px!important;
   }
-  .brand span{display:inline!important;font-size:18px!important}
-  .sidebar nav{display:grid!important;grid-template-columns:1fr!important;gap:7px!important}
-  .nav-item{
-    display:flex!important;
-    align-items:center;
-    width:100%;
-    min-height:44px!important;
-    padding:11px 12px!important;
-    border-radius:9px!important;
-    text-align:left!important;
-    font-size:13px!important;
-    line-height:1.25!important;
-    white-space:nowrap;
-  }
-  .sidebar-tools{margin-top:auto;padding-top:24px}
-  .sidebar-tool-btn{min-height:42px;font-size:12px}
-  .mobile-menu-btn,.mobile-menu-close,.sidebar-backdrop{display:none!important}
-
-  main{
-    width:100%;
-    min-width:0;
-    max-width:none!important;
-    margin:0!important;
-    padding:18px 18px 28px!important;
-  }
-  .view-heading{
-    min-height:64px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    margin:-18px -18px 16px;
-    padding:11px 18px 10px;
-    background:#fff;
-    border-bottom:1px solid var(--line);
-    position:sticky;
-    top:0;
-    z-index:15;
-  }
-  .view-title-row{gap:10px!important;align-items:center!important}
-  #viewTitle{font-size:20px!important;margin:1px 0 0!important}
-  .view-client-name{font-size:14px!important}
-  .eyebrow{font-size:10px!important;line-height:1.2}
-  .build-marker{font-size:9px!important}
-
-  .card{border-radius:14px}
-  .kpis{
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    gap:9px!important;
-    margin-bottom:12px!important;
-  }
-  .kpi{padding:13px 12px!important;min-width:0}
-  .kpi .label{font-size:11px!important;white-space:normal}
-  .kpi .value{font-size:22px!important;margin:6px 0!important;white-space:nowrap}
-  .kpi .change{font-size:10px!important}
-
-  .comparison-strip{margin-bottom:12px!important;padding:11px 13px!important;gap:12px!important}
-  .compare-item{min-width:0}
-  .compare-label{font-size:10px!important}
-  .compare-value{font-size:13px!important}
-
-  .progress-summary-card,.previous-training-card,.exercise-progress-card{margin-bottom:12px!important}
-  .progress-summary-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
-  .summary-tile{padding:10px!important}
-  .summary-tile span{font-size:10px!important}
-  .summary-tile strong{font-size:18px!important}
-
-  .grid.two{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:12px!important;
-    margin-bottom:12px!important;
-  }
-  .grid.one{margin-bottom:12px!important}
-  .chart-card{min-width:0;min-height:310px!important;padding:14px!important}
-  .chart-card svg{height:245px!important}
-  .card-head{gap:8px}
-  .card-head h3{font-size:14px!important}
-  .card-head span{font-size:10px!important}
-  .chart-axis-date,.chart-axis-value,.chart-label,.axis-title,.axis-label{font-size:10px!important}
-  .chart-value-label{font-size:10px!important}
-
-  .exercise-progress-grid{
+  .menu-btn,.mobile-only{display:none!important}
+  .sidebar .brand{font-size:18px}
+  .sidebar .nav button,.sidebar .nav a{min-height:44px;font-size:13px}
+  .page-head{margin-bottom:14px}
+  .page-head h1{font-size:24px!important}
+  .dashboard-grid,.kpi-grid,.stats-grid{
+    display:grid!important;
     grid-template-columns:repeat(6,minmax(0,1fr))!important;
-    gap:8px!important;
+    gap:10px!important;
   }
-  .mini-stat{padding:10px!important;min-width:0}
-  .mini-stat span{font-size:10px!important;min-height:26px}
-  .mini-stat strong{font-size:17px!important;white-space:nowrap}
-  .progress-controls{margin-left:auto;flex-wrap:nowrap!important}
-  .compact-select{min-height:38px;min-width:100px}
-
-  .condition-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;padding:13px!important;gap:8px!important}
-  .condition{padding:11px 8px!important}
-  .condition .icon{font-size:20px!important}
-  .condition .num{font-size:17px!important}
-  .condition .txt{font-size:10px!important}
-
-  .view-actionbar{padding:12px 14px!important;margin-bottom:12px!important}
-  .view-actionbar strong{font-size:14px}
-  .view-actionbar span{font-size:11px}
-  .view-actionbar button{min-height:42px}
-
-  .client-list-card{padding:14px!important}
-  #clientList{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
-  #clientList .client-list-item{min-height:72px;padding:11px!important}
-
-  .training-calendar-section{
-    grid-template-columns:minmax(0,1.55fr) minmax(260px,.9fr)!important;
+  .kpi,.stat-card,.metric-card{
+    min-width:0!important;
+    padding:14px 12px!important;
+    border-radius:14px!important;
+    box-shadow:0 4px 16px rgba(20,45,90,.06);
+  }
+  .kpi .value,.stat-card .value,.metric-card .value{font-size:22px!important}
+  .card{
+    border-radius:15px!important;
+    box-shadow:0 5px 20px rgba(20,45,90,.06)!important;
+  }
+  .charts-grid,.dashboard-charts{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
     gap:12px!important;
-    align-items:start;
   }
-  .training-calendar-section > article:nth-child(3){grid-column:1/-1}
-  .training-calendar-section .card{min-width:0}
-  .calendar-day{min-height:68px!important}
-  .calendar-day-number{font-size:11px!important}
-  .bodypart-volume-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
-
-  .table-wrap{-webkit-overflow-scrolling:touch}
-  table{font-size:12px!important}
-  th,td{padding:10px 7px!important;white-space:nowrap}
-  .period-tabs{padding:0 14px 11px!important}
-  .period-tabs button{min-height:36px;padding:7px 11px!important}
-
-  dialog{width:min(600px,86vw)!important;max-height:88vh;overflow:auto}
-  dialog form{padding:20px!important}
-  input,select,textarea{min-height:42px}
-  button{touch-action:manipulation}
-  .dialog-actions button,.primary,.secondary-btn,.danger-btn{min-height:42px}
-
-  .set-entry-head,.training-set-row{
-    grid-template-columns:52px minmax(0,1fr) minmax(0,1fr) 90px 44px!important;
-    gap:8px!important;
+  .charts-grid > *, .dashboard-charts > *{min-width:0}
+  canvas{max-width:100%}
+  .progress-grid,.summary-grid{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:10px!important;
   }
-  .training-set-row input{min-width:0}
+  table{font-size:12px}
+  th,td{padding:9px 8px!important}
+  .section-title{font-size:15px!important}
 }
 
-/* iPad landscape: dense dashboard similar to desktop reference */
-@media (min-width:1024px) and (max-width:1366px) and (orientation:landscape){
-  .app-shell{grid-template-columns:210px minmax(0,1fr)!important}
-  .sidebar{padding:20px 12px 18px!important}
-  .brand,.brand span{font-size:19px!important}
-  .nav-item{font-size:13px!important;padding:11px 12px!important}
-  main{padding:18px 20px 30px!important}
-  .view-heading{margin:-18px -20px 16px;padding-left:20px;padding-right:20px}
-  .kpis{grid-template-columns:repeat(5,minmax(0,1fr))!important}
-  .chart-card{min-height:320px!important}
-  .chart-card svg{height:255px!important}
-  .exercise-progress-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
-  .bodypart-volume-grid{grid-template-columns:repeat(8,minmax(0,1fr))!important}
+/* iPad landscape: make the dashboard feel like a trainer control center */
+@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+  :root{--ipad-sidebar:190px}
+  .main{padding:16px 18px 26px!important}
+  .card{padding:14px!important}
+  .dashboard-grid,.kpi-grid,.stats-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
 }
 
-/* iPad portrait: preserve sidebar but prioritize reading width */
-@media (min-width:768px) and (max-width:1023px) and (orientation:portrait){
-  .app-shell{grid-template-columns:164px minmax(0,1fr)!important}
-  .sidebar{padding:18px 9px 16px!important}
-  .brand{font-size:15px!important;gap:5px;padding-left:5px!important}
-  .brand span{font-size:15px!important}
-  .nav-item{font-size:12px!important;padding:10px 9px!important}
-  .sidebar-tool-btn{font-size:11px;padding-left:8px;padding-right:8px}
-  main{padding:14px 14px 24px!important}
-  .view-heading{margin:-14px -14px 14px;padding-left:14px;padding-right:14px}
-  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  .kpi:last-child{grid-column:1/-1}
-  .progress-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  .grid.two{grid-template-columns:1fr!important}
-  .exercise-progress-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  .training-calendar-section{grid-template-columns:1fr!important}
-  .training-calendar-section > article:nth-child(3){grid-column:auto}
-  .condition-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  .bodypart-volume-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  #clientList{grid-template-columns:1fr!important}
-}
-
-/* iPhone: explicitly retain the drawer/mobile experience */
-@media (max-width:767px){
-  .app-shell{display:block!important}
-  .mobile-menu-btn{display:flex!important}
-  .sidebar{
-    position:fixed!important;
-    width:min(82vw,320px)!important;
-    transform:translateX(-110%)!important;
-  }
-  .sidebar.open{transform:translateX(0)!important}
+/* iPad portrait: retain density without horizontal overflow */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
+  :root{--ipad-sidebar:150px}
+  .main{padding:16px 14px 24px!important}
+  .sidebar .nav button,.sidebar .nav a{font-size:12px;padding-left:12px!important;padding-right:8px!important}
+  .dashboard-grid,.kpi-grid,.stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .charts-grid,.dashboard-charts{grid-template-columns:1fr!important}
+  .progress-grid,.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
