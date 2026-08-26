@@ -1002,7 +1002,6 @@ function render(){
     const drecent=document.getElementById('dashboardRecentTraining');if(drecent)drecent.innerHTML='<tr><td colspan="5">クライアントを登録してください</td></tr>';
     const dcond=document.getElementById('dashboardConditionSummary');if(dcond)dcond.innerHTML='';
     ['dashboardWeightChart','dashboardWaterChart','dashboardOrmChart','dashboardVolumeChart'].forEach(id=>{const s=document.getElementById(id);if(s){s.innerHTML='';emptyChart(s)}});
-    renderDashboardPro(trAll,bdAll);
   cleanDashboardVolumeUI();
   removeEstimated1RmBestUi();
   applyView(currentView);
@@ -1038,6 +1037,8 @@ function render(){
     ['睡眠',lastSleep==null?'—':n(lastSleep)+' h'],
   ];
   document.getElementById('kpiGrid').innerHTML=kpis.map(x=>`<article class="card kpi"><div class="label">${x[0]}</div><div class="value">${x[1]}</div></article>`).join('');
+
+  renderDashboardPro(trAll,bdAll);
 
   const curVol=tr.reduce((s,x)=>s+trainingVolume(x),0),prevVol=prevTr.reduce((s,x)=>s+trainingVolume(x),0);
   const curSleep=avg(bd,'sleep'),prevSleep=avg(prevBd,'sleep');
@@ -1348,5 +1349,84 @@ document.getElementById('selectedTrainingDayDetails')?.addEventListener('click',
   const delBtn=e.target.closest('[data-delete-training]');
   if(delBtn){ removeTraining(delBtn.dataset.deleteTraining); }
 });
+
+
+const DEMO_MARKER='__PT_DEMO_V33__';
+
+function offsetDate(daysAgo){
+  const d=new Date();
+  d.setHours(12,0,0,0);
+  d.setDate(d.getDate()-daysAgo);
+  return ymdLocal(d);
+}
+function demoTrainingRecord(date,exercise,bodyPart,sets){
+  const top=sets[0];
+  return {
+    id:cloudUuid(),
+    clientId:state.activeClientId,
+    date,
+    exercise,
+    weight:Number(top.weight),
+    reps:Number(top.reps),
+    sets:sets.length,
+    rpe:null,
+    note:encodeTrainingNote(sets,DEMO_MARKER,bodyPart)
+  };
+}
+function seedDashboardDemoData(){
+  const c=active();
+  if(!c){alert('先にクライアントを選択してください。');return;}
+  const existingDemo=state.training.some(r=>r.clientId===state.activeClientId&&visibleTrainingNote(r).includes(DEMO_MARKER))
+    || state.body.some(r=>r.clientId===state.activeClientId&&String(r.note||'').includes(DEMO_MARKER));
+  if(existingDemo && !confirm('サンプルデータがすでにあります。追加で投入しますか？'))return;
+
+  const bodyPoints=[
+    [30,89.2,1.7,6.5,7200,6],[28,88.9,1.8,6.8,7600,6],[26,88.7,1.9,7.0,8100,7],
+    [24,88.5,2.0,7.1,8400,7],[22,88.3,2.1,7.2,9000,8],[20,88.1,2.0,7.0,8500,7],
+    [18,87.9,2.2,7.3,9300,8],[16,87.8,2.2,7.5,10100,8],[14,87.6,2.3,7.2,9200,7],
+    [12,87.5,2.4,7.4,9800,8],[10,87.4,2.3,7.6,10400,8],[8,87.3,2.5,7.5,9900,8],
+    [6,87.2,2.4,7.7,10800,9],[4,87.1,2.5,7.6,10300,8],[2,87.0,2.6,7.8,11200,9],[0,86.9,2.5,8.0,10600,9]
+  ];
+  bodyPoints.forEach(([ago,w,water,sleep,steps,condition])=>{
+    state.body.push({
+      id:cloudUuid(),clientId:state.activeClientId,date:offsetDate(ago),
+      bodyWeight:w,bodyFat:null,water,sleep,steps,condition,note:DEMO_MARKER
+    });
+  });
+
+  const sessions=[
+    [29,'ベンチプレス','胸',[[100,8],[100,8],[97.5,10]]],
+    [27,'スクワット','脚',[[115,7],[115,7],[110,9]]],
+    [25,'ラットプルダウン','背中',[[75,10],[75,10],[70,12]]],
+    [22,'ベンチプレス','胸',[[102.5,8],[102.5,8],[100,9]]],
+    [20,'ショルダープレス','肩',[[55,9],[55,9],[52.5,10]]],
+    [18,'スクワット','脚',[[120,6],[120,6],[115,8]]],
+    [15,'ベンチプレス','胸',[[105,8],[105,8],[102.5,9]]],
+    [13,'ラットプルダウン','背中',[[80,9],[80,9],[75,11]]],
+    [11,'スクワット','脚',[[122.5,6],[122.5,6],[117.5,8]]],
+    [8,'ベンチプレス','胸',[[107.5,8],[107.5,8],[105,9]]],
+    [6,'ショルダープレス','肩',[[60,8],[60,8],[57.5,10]]],
+    [4,'スクワット','脚',[[125,6],[125,6],[120,8]]],
+    [2,'ラットプルダウン','背中',[[82.5,10],[82.5,9],[77.5,12]]],
+    [0,'ベンチプレス','胸',[[110,8],[110,8],[107.5,9]]]
+  ];
+  sessions.forEach(([ago,exercise,part,sets])=>{
+    state.training.push(demoTrainingRecord(offsetDate(ago),exercise,part,sets));
+  });
+
+  save();
+  render();
+  alert('サンプルデータを投入しました。');
+}
+function removeDashboardDemoData(){
+  const beforeT=state.training.length,beforeB=state.body.length;
+  state.training=state.training.filter(r=>!(r.clientId===state.activeClientId&&visibleTrainingNote(r).includes(DEMO_MARKER)));
+  state.body=state.body.filter(r=>!(r.clientId===state.activeClientId&&String(r.note||'').includes(DEMO_MARKER)));
+  const removed=(beforeT-state.training.length)+(beforeB-state.body.length);
+  save();render();
+  alert(removed?`サンプルデータを${removed}件削除しました。`:'削除するサンプルデータはありません。');
+}
+document.getElementById('seedDemoBtn')?.addEventListener('click',seedDashboardDemoData);
+document.getElementById('removeDemoBtn')?.addEventListener('click',removeDashboardDemoData);
 
 render();
