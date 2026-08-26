@@ -546,244 +546,110 @@ body:not(.clients-view) #clientListPanel{display:none!important}
 }
 
 
-/* ===== PT Analytics v31.0 — iPad dashboard density upgrade ===== */
-@media (min-width: 834px) and (max-width: 1366px) {
-  :root{--ipad-sidebar:176px}
-  body{background:#f4f7fb}
-  .sidebar{
-    width:var(--ipad-sidebar)!important;
-    transform:none!important;
-    box-shadow:8px 0 28px rgba(10,25,55,.08);
-  }
-  .main{
-    margin-left:var(--ipad-sidebar)!important;
-    width:calc(100% - var(--ipad-sidebar))!important;
-    padding:18px 20px 28px!important;
-  }
-  .menu-btn,.mobile-only{display:none!important}
-  .sidebar .brand{font-size:18px}
-  .sidebar .nav button,.sidebar .nav a{min-height:44px;font-size:13px}
-  .page-head{margin-bottom:14px}
-  .page-head h1{font-size:24px!important}
-  .dashboard-grid,.kpi-grid,.stats-grid{
-    display:grid!important;
-    grid-template-columns:repeat(6,minmax(0,1fr))!important;
-    gap:10px!important;
-  }
-  .kpi,.stat-card,.metric-card{
-    min-width:0!important;
-    padding:14px 12px!important;
-    border-radius:14px!important;
-    box-shadow:0 4px 16px rgba(20,45,90,.06);
-  }
-  .kpi .value,.stat-card .value,.metric-card .value{font-size:22px!important}
-  .card{
-    border-radius:15px!important;
-    box-shadow:0 5px 20px rgba(20,45,90,.06)!important;
-  }
-  .charts-grid,.dashboard-charts{
-    display:grid!important;
-    grid-template-columns:1fr 1fr!important;
-    gap:12px!important;
-  }
-  .charts-grid > *, .dashboard-charts > *{min-width:0}
-  canvas{max-width:100%}
-  .progress-grid,.summary-grid{
-    display:grid!important;
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    gap:10px!important;
-  }
-  table{font-size:12px}
-  th,td{padding:9px 8px!important}
-  .section-title{font-size:15px!important}
-}
-
-/* iPad landscape: make the dashboard feel like a trainer control center */
-@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
-  :root{--ipad-sidebar:190px}
-  .main{padding:16px 18px 26px!important}
-  .card{padding:14px!important}
-  .dashboard-grid,.kpi-grid,.stats-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
-}
-
-/* iPad portrait: retain density without horizontal overflow */
-@media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
-  :root{--ipad-sidebar:150px}
-  .main{padding:16px 14px 24px!important}
-  .sidebar .nav button,.sidebar .nav a{font-size:12px;padding-left:12px!important;padding-right:8px!important}
-  .dashboard-grid,.kpi-grid,.stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-  .charts-grid,.dashboard-charts{grid-template-columns:1fr!important}
-  .progress-grid,.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-}
-
-
-/* ===== PT Analytics v32.0 — Pro iPad dashboard ===== */
-.ipad-dashboard-pro{display:grid;gap:14px;margin-bottom:16px}
-.dashboard-pro-grid{display:grid;gap:14px;min-width:0}
-.dashboard-pro-grid-two{grid-template-columns:1fr 1fr}
-.dashboard-pro-grid-three{grid-template-columns:1fr 1fr 1fr}
-.dashboard-pro-grid-bottom{grid-template-columns:minmax(0,1.65fr) minmax(300px,.85fr)}
-.dashboard-pro-card{min-width:0;overflow:hidden}
-.compact-chart-card{min-height:292px!important;padding:16px!important}
-.compact-chart-card svg{height:218px!important}
-.dashboard-card-sub{display:block!important;margin-top:3px;font-size:11px!important;color:var(--muted)!important}
-.dashboard-pro-kpi{min-height:98px;display:flex;flex-direction:column;justify-content:center}
-.dashboard-pro-kpi .value{font-size:25px!important;letter-spacing:-.02em}
-.kpi-topline{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.kpi-tag{font-size:8px;font-weight:800;letter-spacing:.08em;color:#8fa0b6;background:#f2f6fb;border:1px solid #e5edf6;padding:3px 5px;border-radius:999px}
-.dashboard-performance-list{display:grid;gap:0;margin-top:5px}
-.dashboard-performance-row{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(100px,.9fr) 74px;gap:8px;align-items:center;padding:11px 2px;border-bottom:1px solid var(--line)}
-.dashboard-performance-row:last-child{border-bottom:0}
-.dashboard-performance-row>div:first-child{min-width:0}
-.dashboard-performance-row strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dashboard-performance-row span{display:block;color:var(--muted);font-size:9px;margin-top:2px}
-.dashboard-performance-main{font-size:11px;font-weight:700;white-space:nowrap}
-.dashboard-performance-orm{text-align:right;font-size:12px;font-weight:800;color:var(--blue)}
-.dashboard-recent-card,.dashboard-condition-card{padding:16px}
-.dashboard-table-wrap{padding:0!important;overflow:auto}
-.dashboard-recent-table{font-size:11px}
-.dashboard-recent-table th,.dashboard-recent-table td{padding:10px 7px!important;white-space:nowrap}
-.dashboard-condition-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.dashboard-condition-item{border:1px solid var(--line);border-radius:13px;padding:13px 12px;background:#fbfdff;min-height:96px;display:grid;align-content:center}
-.dashboard-condition-icon{font-size:20px}
-.dashboard-condition-label{font-size:10px;color:var(--muted);margin:4px 0}
-.dashboard-condition-item strong{font-size:19px}
-#ipadDashboardPro .chart-axis-value{font-size:10px}
-
-/* On iPad dashboard, prioritize the new high-density control center. */
-@media (min-width:834px) and (max-width:1366px){
-  body:not(.clients-view) #kpiGrid[data-section="dashboard"]{
-    grid-template-columns:repeat(6,minmax(0,1fr))!important;
-    gap:10px!important;
-  }
-  #ipadDashboardPro{display:grid!important}
-  #previousTrainingCard[data-section="dashboard"],
-  #comparisonStrip[data-section="dashboard"],
-  #progressSummary[data-section="dashboard"]{display:none!important}
-}
-@media (min-width:834px) and (max-width:1100px){
-  .dashboard-pro-grid-three{grid-template-columns:1fr 1fr}
-  .dashboard-pro-grid-three>article:last-child{grid-column:1/-1}
-  .dashboard-pro-grid-bottom{grid-template-columns:1fr}
-  body:not(.clients-view) #kpiGrid[data-section="dashboard"]{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-}
-@media (min-width:768px) and (max-width:833px){
-  .dashboard-pro-grid-two,.dashboard-pro-grid-three,.dashboard-pro-grid-bottom{grid-template-columns:1fr}
-  #ipadDashboardPro{display:grid!important}
-}
-/* iPhone keeps the simpler existing dashboard. */
-@media (max-width:767px){
-  #ipadDashboardPro{display:none!important}
-}
-
-
-/* ===== PT Analytics v33.0 — iPad one-screen dashboard ===== */
-.dashboard-demo-actions{margin-left:auto;display:flex;gap:6px;align-items:center}
-.dashboard-demo-btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer}
-.dashboard-demo-btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
-
-@media (min-width:1024px) and (max-width:1366px) and (orientation:landscape){
+/* ===== v34 iPad live one-screen dashboard ===== */
+@media (min-width:1024px) and (orientation:landscape){
   html,body{height:100%;overflow:hidden!important}
   body{padding-top:0!important}
-  .app-shell{height:100vh;min-height:0!important}
-  .sidebar{height:100vh!important}
+  .app-shell{height:100dvh!important;min-height:0!important}
+  .sidebar{height:100dvh!important;overflow:hidden!important}
   main{
-    height:100vh!important;
+    height:100dvh!important;min-height:0!important;
     overflow:hidden!important;
-    padding:12px 14px!important;
+    padding:8px 12px!important;
     max-width:none!important;
   }
-  .view-heading{
-    height:42px;
-    margin:0 0 7px!important;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
+
+  /* Dashboard only: compact all rows into the visible Safari viewport */
+  body:has(.nav-item[data-view="dashboard"].active) main{overflow:hidden!important}
+  .view-heading[data-section="dashboard"], .view-heading:not(.view-hidden){
+    margin:0 0 4px!important;
   }
-  .view-heading .eyebrow{font-size:9px!important;line-height:1;margin:0 0 2px!important}
-  .view-title-row{align-items:center!important;gap:8px!important}
-  .view-heading h2{font-size:20px!important;line-height:1.05}
-  .view-client-name{font-size:14px!important}
-  .dashboard-demo-btn{padding:5px 8px;font-size:9px}
+  .view-heading .eyebrow{font-size:8px!important;line-height:1!important;margin:0 0 1px!important}
+  .view-heading h2{font-size:18px!important;line-height:1!important}
+  .view-client-name{font-size:13px!important}
+  .build-marker{font-size:7px!important}
 
   #kpiGrid[data-section="dashboard"]{
-    height:72px;
-    margin-bottom:7px!important;
-    gap:7px!important;
+    height:58px!important;min-height:58px!important;
+    gap:5px!important;margin:0 0 5px!important;
   }
-  .dashboard-pro-kpi{
-    min-height:0!important;
-    height:72px!important;
-    padding:8px 9px!important;
-    border-radius:11px!important;
+  .dashboard-pro-kpi,.kpi{
+    min-height:0!important;height:58px!important;
+    padding:6px 8px!important;border-radius:9px!important;
   }
-  .dashboard-pro-kpi .label{font-size:9px!important}
-  .dashboard-pro-kpi .value{font-size:19px!important;margin:4px 0 0!important}
-  .kpi-tag{font-size:6px!important;padding:2px 4px!important}
+  .dashboard-pro-kpi .label,.kpi .label{font-size:8px!important}
+  .dashboard-pro-kpi .value,.kpi .value{font-size:17px!important;line-height:1!important;margin-top:3px!important}
+  .kpi-tag{font-size:5px!important;padding:1px 3px!important}
+
+  #previousTrainingCard[data-section="dashboard"]{
+    min-height:0!important;margin:0 0 5px!important;padding:7px 9px!important;
+  }
+  #previousTrainingCard h3{font-size:11px!important;margin:0 0 4px!important}
+  #previousTrainingCard .previous-training-main{padding:5px 7px!important}
+  #previousTrainingCard .previous-training-main strong{font-size:10px!important}
+  #previousTrainingCard .previous-set-chip{font-size:7px!important;padding:3px 5px!important}
+
+  #comparisonStrip[data-section="dashboard"]{
+    min-height:30px!important;height:30px!important;
+    margin:0 0 5px!important;padding:4px 9px!important;
+    font-size:8px!important;border-radius:9px!important;
+  }
+  #comparisonStrip strong{font-size:10px!important}
+  .compare-item{gap:3px!important}.compare-label,.compare-value{font-size:8px!important}
 
   #ipadDashboardPro{
-    height:calc(100vh - 140px)!important;
+    height:calc(100dvh - 174px)!important;
+    min-height:0!important;
     display:grid!important;
-    grid-template-rows:1.05fr .92fr .78fr;
-    gap:7px!important;
-    margin:0!important;
-    overflow:hidden!important;
+    grid-template-rows:minmax(0,1.15fr) minmax(0,.85fr) minmax(0,.62fr)!important;
+    gap:5px!important;margin:0!important;overflow:hidden!important;
   }
-  .dashboard-pro-grid{gap:7px!important;min-height:0!important}
-  .dashboard-pro-grid-two,.dashboard-pro-grid-three,.dashboard-pro-grid-bottom{min-height:0!important}
-  .dashboard-pro-card{
-    min-height:0!important;
-    height:100%!important;
-    border-radius:11px!important;
+  .dashboard-pro-grid{gap:5px!important;min-height:0!important;height:100%!important}
+  .dashboard-pro-grid-two,.dashboard-pro-grid-three,.dashboard-pro-grid-bottom{min-height:0!important;height:100%!important}
+  .dashboard-pro-card,.compact-chart-card{
+    min-height:0!important;height:100%!important;
+    padding:6px 8px!important;border-radius:9px!important;overflow:hidden!important;
   }
-  .compact-chart-card{
-    min-height:0!important;
-    height:100%!important;
-    padding:9px 10px!important;
+  .compact-chart-card .card-head,.dashboard-pro-card .card-head{
+    min-height:20px!important;height:20px!important;margin:0 0 1px!important;
   }
-  .compact-chart-card .card-head{height:27px;margin-bottom:1px!important}
-  .compact-chart-card .card-head h3,
-  .dashboard-recent-card .card-head h3,
-  .dashboard-condition-card .card-head h3{font-size:12px!important}
-  .dashboard-card-sub{font-size:8px!important;margin-top:1px!important}
+  .compact-chart-card .card-head h3,.dashboard-pro-card .card-head h3,
+  .dashboard-recent-card .card-head h3,.dashboard-condition-card .card-head h3{
+    font-size:10px!important;line-height:1!important;
+  }
+  .dashboard-card-sub{font-size:6px!important;line-height:1!important;margin-top:1px!important}
   .compact-chart-card svg{
-    height:calc(100% - 28px)!important;
-    min-height:0!important;
+    display:block!important;
+    width:100%!important;height:calc(100% - 22px)!important;
+    min-height:0!important;overflow:visible!important;
   }
 
-  .dashboard-performance-row{
-    padding:5px 1px!important;
-    grid-template-columns:minmax(0,1.2fr) minmax(90px,.9fr) 62px!important;
-  }
-  .dashboard-performance-row strong{font-size:10px!important}
-  .dashboard-performance-row span{font-size:7px!important}
-  .dashboard-performance-main,.dashboard-performance-orm{font-size:9px!important}
+  .dashboard-performance-row{padding:3px 1px!important;min-height:0!important}
+  .dashboard-performance-row strong{font-size:8px!important}
+  .dashboard-performance-row span{font-size:6px!important}
+  .dashboard-performance-main,.dashboard-performance-orm{font-size:8px!important}
 
-  .dashboard-recent-card,.dashboard-condition-card{padding:8px 10px!important}
-  .dashboard-recent-card .card-head,.dashboard-condition-card .card-head{height:26px;margin-bottom:1px!important}
-  .dashboard-recent-table{font-size:8px!important}
-  .dashboard-recent-table th,.dashboard-recent-table td{padding:4px 5px!important}
+  .dashboard-recent-card,.dashboard-condition-card{padding:5px 7px!important}
+  .dashboard-recent-card .card-head,.dashboard-condition-card .card-head{height:18px!important;margin:0!important}
+  .dashboard-recent-table{font-size:6px!important}
+  .dashboard-recent-table th,.dashboard-recent-table td{padding:2px 3px!important;line-height:1.05!important}
   .dashboard-condition-summary{
-    grid-template-columns:repeat(4,1fr)!important;
-    gap:5px!important;
-    margin-top:4px!important;
-    height:calc(100% - 30px);
+    grid-template-columns:repeat(4,1fr)!important;gap:3px!important;
+    margin-top:2px!important;height:calc(100% - 20px)!important;
   }
-  .dashboard-condition-item{
-    min-height:0!important;
-    height:100%!important;
-    padding:5px 7px!important;
-    border-radius:9px!important;
-  }
-  .dashboard-condition-icon{font-size:15px!important}
-  .dashboard-condition-label{font-size:7px!important;margin:1px 0!important}
-  .dashboard-condition-item strong{font-size:13px!important}
+  .dashboard-condition-item{min-height:0!important;height:100%!important;padding:3px!important;border-radius:7px!important}
+  .dashboard-condition-icon{font-size:11px!important;line-height:1!important}
+  .dashboard-condition-label{font-size:5px!important;margin:0!important}
+  .dashboard-condition-item strong{font-size:10px!important;line-height:1!important}
+
+  /* hide dashboard-only legacy/duplicate blocks that consume vertical space */
+  #progressSummary[data-section="dashboard"],
+  .progress-summary-card[data-section="dashboard"]{display:none!important}
 }
 
-/* Extra-tight fit for 11-inch iPad landscape Safari */
-@media (min-width:1100px) and (max-height:900px) and (orientation:landscape){
-  #ipadDashboardPro{height:calc(100vh - 132px)!important}
-  #kpiGrid[data-section="dashboard"]{height:66px!important}
-  .dashboard-pro-kpi{height:66px!important}
-  .view-heading{height:38px}
+@media (min-width:1024px) and (max-height:820px) and (orientation:landscape){
+  #ipadDashboardPro{height:calc(100dvh - 166px)!important}
+  #kpiGrid[data-section="dashboard"]{height:52px!important;min-height:52px!important}
+  .dashboard-pro-kpi,.kpi{height:52px!important}
+  #previousTrainingCard[data-section="dashboard"]{padding:5px 8px!important}
 }

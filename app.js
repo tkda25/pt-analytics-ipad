@@ -875,104 +875,6 @@ function renderPracticalReport(rows,bodyRows){
     <div class="report-metric"><span>部位別ボリューム</span><div class="report-bodypart-list">${bp||'—'}</div></div>`;
 }
 
-
-function dashboardExerciseRows(rows,name){
-  return rows.filter(r=>r.exercise===name);
-}
-function dashboardBestOrm(rows,name){
-  const a=dashboardExerciseRows(rows,name);
-  return a.length?Math.max(...a.map(r=>recordBest1RM(r))):null;
-}
-function renderDashboardPro(trAll,bdAll){
-  const perf=document.getElementById('dashboardPerformanceList');
-  const recent=document.getElementById('dashboardRecentTraining');
-  const cond=document.getElementById('dashboardConditionSummary');
-  if(!perf||!recent||!cond)return;
-
-  const bench=dashboardBestOrm(trAll,'ベンチプレス');
-  const squat=dashboardBestOrm(trAll,'スクワット');
-  const monthKey=today().slice(0,7);
-  const monthSessions=new Set(trAll.filter(r=>String(r.date).startsWith(monthKey)).map(r=>r.date)).size;
-
-  // Upgrade the top KPI strip to six trainer-focused metrics.
-  const lastW=latest(bdAll,'bodyWeight');
-  const lastWater=latest(bdAll,'water');
-  const lastSleep=latest(bdAll,'sleep');
-  const kpis=[
-    ['最新体重',lastW==null?'—':n(lastW)+' kg','BODY'],
-    ['水分量',lastWater==null?'—':n(lastWater)+' L','HYDRATION'],
-    ['睡眠',lastSleep==null?'—':n(lastSleep)+' h','RECOVERY'],
-    ['ベンチ推定1RM',bench==null?'—':n(bench)+' kg','STRENGTH'],
-    ['スクワット推定1RM',squat==null?'—':n(squat)+' kg','STRENGTH'],
-    ['今月トレ日数',monthSessions+' 日','MONTH']
-  ];
-  const kg=document.getElementById('kpiGrid');
-  if(kg)kg.innerHTML=kpis.map(([label,value,tag])=>`
-    <article class="card kpi dashboard-pro-kpi">
-      <div class="kpi-topline"><span class="label">${label}</span><span class="kpi-tag">${tag}</span></div>
-      <div class="value">${value}</div>
-    </article>`).join('');
-
-  const bodyWindow=bdAll.slice(-18);
-  drawLine('dashboardWeightChart',bodyWindow.filter(x=>x.bodyWeight).map(x=>({date:x.date,value:x.bodyWeight})));
-  drawLine('dashboardWaterChart',bodyWindow.filter(x=>x.water).map(x=>({date:x.date,value:x.water})));
-
-  // Use the exercise with the most records for the dashboard 1RM trend.
-  const counts={};
-  trAll.forEach(r=>counts[r.exercise]=(counts[r.exercise]||0)+1);
-  const strengthExercise=Object.keys(counts).sort((a,b)=>counts[b]-counts[a])[0]||'ベンチプレス';
-  const strengthRows=trAll.filter(r=>r.exercise===strengthExercise).slice(-12);
-  const strengthLabel=document.getElementById('dashboardStrengthExerciseLabel');
-  if(strengthLabel)strengthLabel.textContent=strengthExercise;
-  drawLine('dashboardOrmChart',strengthRows.map(r=>({date:r.date,value:recordBest1RM(r)})));
-
-  // Latest performance for up to five exercises.
-  const latestByExercise=new Map();
-  [...trAll].sort((a,b)=>a.date.localeCompare(b.date)).forEach(r=>latestByExercise.set(r.exercise,r));
-  const performance=[...latestByExercise.values()].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-  perf.innerHTML=performance.length?performance.map(r=>{
-    const top=recordTopSet(r);
-    return `<div class="dashboard-performance-row">
-      <div><strong>${esc(r.exercise)}</strong><span>${r.date}</span></div>
-      <div class="dashboard-performance-main">${n(top.weight)} kg × ${Math.round(top.reps)}回</div>
-      <div class="dashboard-performance-orm">${n(recordBest1RM(r))} kg</div>
-    </div>`;
-  }).join(''):'<div class="empty-state">まだトレーニング記録がありません</div>';
-
-  drawBars('dashboardVolumeChart',groupVolumeByDate(trAll.slice(-30)));
-
-  const latestRows=[...trAll].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6);
-  const drd=document.getElementById('dashboardRecentDate');
-  if(drd)drd.textContent=latestRows[0]?.date||'—';
-  recent.innerHTML=latestRows.length?latestRows.map(r=>{
-    const top=recordTopSet(r);
-    return `<tr>
-      <td>${r.date}</td>
-      <td><strong>${esc(r.exercise)}</strong></td>
-      <td>${n(top.weight)}kg × ${Math.round(top.reps)}回</td>
-      <td>${n(recordBest1RM(r))}kg</td>
-      <td>${Math.round(trainingVolume(r)).toLocaleString()}kg</td>
-    </tr>`;
-  }).join(''):'<tr><td colspan="5">まだ記録がありません</td></tr>';
-
-  const last7=bdAll.slice(-7);
-  const citems=[
-    ['💧','水分',avg(last7,'water'), 'L'],
-    ['🌙','睡眠',avg(last7,'sleep'), 'h'],
-    ['👟','歩数',avg(last7,'steps'), '歩'],
-    ['⚡','体調',avg(last7,'condition'), '/10']
-  ];
-  cond.innerHTML=citems.map(([icon,label,value,unit])=>{
-    let shown='—';
-    if(value!=null) shown=unit==='歩'?Math.round(value).toLocaleString()+unit:n(value)+unit;
-    return `<div class="dashboard-condition-item">
-      <span class="dashboard-condition-icon">${icon}</span>
-      <span class="dashboard-condition-label">${label}</span>
-      <strong>${shown}</strong>
-    </div>`;
-  }).join('');
-}
-
 function render(){
   const c=active();
   fillClientSelects();refreshExercises();
@@ -998,12 +900,8 @@ function render(){
     ['weightChart','waterChart','sleepChart','stepsChart','ormChart','volumeChart','exerciseWeightChart','exerciseOrmChart','exerciseVolumeChart'].forEach(id=>{
       const s=document.getElementById(id);if(s){s.innerHTML='';emptyChart(s)}
     });
-    const dperf=document.getElementById('dashboardPerformanceList');if(dperf)dperf.innerHTML='<div class="empty-state">クライアントを登録してください</div>';
-    const drecent=document.getElementById('dashboardRecentTraining');if(drecent)drecent.innerHTML='<tr><td colspan="5">クライアントを登録してください</td></tr>';
-    const dcond=document.getElementById('dashboardConditionSummary');if(dcond)dcond.innerHTML='';
-    ['dashboardWeightChart','dashboardWaterChart','dashboardOrmChart','dashboardVolumeChart'].forEach(id=>{const s=document.getElementById(id);if(s){s.innerHTML='';emptyChart(s)}});
-  cleanDashboardVolumeUI();
-  removeEstimated1RmBestUi();
+    cleanDashboardVolumeUI();
+    removeEstimated1RmBestUi();
   applyView(currentView);
     return;
   }
@@ -1351,82 +1249,16 @@ document.getElementById('selectedTrainingDayDetails')?.addEventListener('click',
 });
 
 
-const DEMO_MARKER='__PT_DEMO_V33__';
-
-function offsetDate(daysAgo){
-  const d=new Date();
-  d.setHours(12,0,0,0);
-  d.setDate(d.getDate()-daysAgo);
-  return ymdLocal(d);
-}
-function demoTrainingRecord(date,exercise,bodyPart,sets){
-  const top=sets[0];
-  return {
-    id:cloudUuid(),
-    clientId:state.activeClientId,
-    date,
-    exercise,
-    weight:Number(top.weight),
-    reps:Number(top.reps),
-    sets:sets.length,
-    rpe:null,
-    note:encodeTrainingNote(sets,DEMO_MARKER,bodyPart)
-  };
-}
-function seedDashboardDemoData(){
-  const c=active();
-  if(!c){alert('先にクライアントを選択してください。');return;}
-  const existingDemo=state.training.some(r=>r.clientId===state.activeClientId&&visibleTrainingNote(r).includes(DEMO_MARKER))
-    || state.body.some(r=>r.clientId===state.activeClientId&&String(r.note||'').includes(DEMO_MARKER));
-  if(existingDemo && !confirm('サンプルデータがすでにあります。追加で投入しますか？'))return;
-
-  const bodyPoints=[
-    [30,89.2,1.7,6.5,7200,6],[28,88.9,1.8,6.8,7600,6],[26,88.7,1.9,7.0,8100,7],
-    [24,88.5,2.0,7.1,8400,7],[22,88.3,2.1,7.2,9000,8],[20,88.1,2.0,7.0,8500,7],
-    [18,87.9,2.2,7.3,9300,8],[16,87.8,2.2,7.5,10100,8],[14,87.6,2.3,7.2,9200,7],
-    [12,87.5,2.4,7.4,9800,8],[10,87.4,2.3,7.6,10400,8],[8,87.3,2.5,7.5,9900,8],
-    [6,87.2,2.4,7.7,10800,9],[4,87.1,2.5,7.6,10300,8],[2,87.0,2.6,7.8,11200,9],[0,86.9,2.5,8.0,10600,9]
-  ];
-  bodyPoints.forEach(([ago,w,water,sleep,steps,condition])=>{
-    state.body.push({
-      id:cloudUuid(),clientId:state.activeClientId,date:offsetDate(ago),
-      bodyWeight:w,bodyFat:null,water,sleep,steps,condition,note:DEMO_MARKER
-    });
+/* v34: actual input -> dashboard live refresh */
+['bodyForm','trainingForm'].forEach(id=>{
+  const form=document.getElementById(id);
+  if(!form)return;
+  form.addEventListener('submit',()=>{
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      render();
+      if(typeof applyView==='function') applyView(currentView);
+    }));
   });
-
-  const sessions=[
-    [29,'ベンチプレス','胸',[[100,8],[100,8],[97.5,10]]],
-    [27,'スクワット','脚',[[115,7],[115,7],[110,9]]],
-    [25,'ラットプルダウン','背中',[[75,10],[75,10],[70,12]]],
-    [22,'ベンチプレス','胸',[[102.5,8],[102.5,8],[100,9]]],
-    [20,'ショルダープレス','肩',[[55,9],[55,9],[52.5,10]]],
-    [18,'スクワット','脚',[[120,6],[120,6],[115,8]]],
-    [15,'ベンチプレス','胸',[[105,8],[105,8],[102.5,9]]],
-    [13,'ラットプルダウン','背中',[[80,9],[80,9],[75,11]]],
-    [11,'スクワット','脚',[[122.5,6],[122.5,6],[117.5,8]]],
-    [8,'ベンチプレス','胸',[[107.5,8],[107.5,8],[105,9]]],
-    [6,'ショルダープレス','肩',[[60,8],[60,8],[57.5,10]]],
-    [4,'スクワット','脚',[[125,6],[125,6],[120,8]]],
-    [2,'ラットプルダウン','背中',[[82.5,10],[82.5,9],[77.5,12]]],
-    [0,'ベンチプレス','胸',[[110,8],[110,8],[107.5,9]]]
-  ];
-  sessions.forEach(([ago,exercise,part,sets])=>{
-    state.training.push(demoTrainingRecord(offsetDate(ago),exercise,part,sets));
-  });
-
-  save();
-  render();
-  alert('サンプルデータを投入しました。');
-}
-function removeDashboardDemoData(){
-  const beforeT=state.training.length,beforeB=state.body.length;
-  state.training=state.training.filter(r=>!(r.clientId===state.activeClientId&&visibleTrainingNote(r).includes(DEMO_MARKER)));
-  state.body=state.body.filter(r=>!(r.clientId===state.activeClientId&&String(r.note||'').includes(DEMO_MARKER)));
-  const removed=(beforeT-state.training.length)+(beforeB-state.body.length);
-  save();render();
-  alert(removed?`サンプルデータを${removed}件削除しました。`:'削除するサンプルデータはありません。');
-}
-document.getElementById('seedDemoBtn')?.addEventListener('click',seedDashboardDemoData);
-document.getElementById('removeDemoBtn')?.addEventListener('click',removeDashboardDemoData);
+});
 
 render();

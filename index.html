@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PT Analytics v33.0 iPad</title>
-  <link rel="stylesheet" href="style.css?v=33-0826" />
+  <title>PT Analytics v34.0 iPad</title>
+  <link rel="stylesheet" href="style.css?v=34-0826" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js?v=27-0826a"></script>
 <style id="v24-critical">
@@ -56,14 +56,10 @@
 
     <main>
       <div class="view-heading">
-        <p class="eyebrow">MENU <small class="build-marker">v33.0 iPad</small></p>
+        <p class="eyebrow">MENU <small class="build-marker">v34.0</small></p>
         <div class="view-title-row">
           <h2 id="viewTitle">ダッシュボード</h2>
           <span id="viewClientName" class="view-client-name">未登録</span>
-          <div class="dashboard-demo-actions" data-section="dashboard">
-            <button type="button" id="seedDemoBtn" class="dashboard-demo-btn primary">サンプルデータ投入</button>
-            <button type="button" id="removeDemoBtn" class="dashboard-demo-btn">サンプル削除</button>
-          </div>
         </div>
       </div>
 
@@ -138,76 +134,6 @@
         <div id="previousTrainingContent" class="previous-training-content"><div class="empty-state">まだトレーニング記録がありません</div></div>
       </section>
       <section class="comparison-strip card" id="comparisonStrip" data-section="dashboard"></section>
-
-      <section class="ipad-dashboard-pro" id="ipadDashboardPro" data-section="dashboard">
-        <div class="dashboard-pro-grid dashboard-pro-grid-two">
-          <article class="card dashboard-pro-card chart-card compact-chart-card">
-            <div class="card-head">
-              <div><h3>体重の推移</h3><span class="dashboard-card-sub">直近の身体データ</span></div>
-              <span>kg</span>
-            </div>
-            <svg id="dashboardWeightChart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg>
-          </article>
-
-          <article class="card dashboard-pro-card chart-card compact-chart-card">
-            <div class="card-head">
-              <div><h3>水分摂取量の推移</h3><span class="dashboard-card-sub">1日あたり</span></div>
-              <span>L</span>
-            </div>
-            <svg id="dashboardWaterChart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg>
-          </article>
-        </div>
-
-        <div class="dashboard-pro-grid dashboard-pro-grid-three">
-          <article class="card dashboard-pro-card chart-card compact-chart-card">
-            <div class="card-head">
-              <div><h3>推定1RMの推移</h3><span class="dashboard-card-sub" id="dashboardStrengthExerciseLabel">主要種目</span></div>
-              <span>kg</span>
-            </div>
-            <svg id="dashboardOrmChart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg>
-          </article>
-
-          <article class="card dashboard-pro-card chart-card compact-chart-card">
-            <div class="card-head">
-              <div><h3>種目別パフォーマンス</h3><span class="dashboard-card-sub" id="dashboardPerformanceLabel">最新記録</span></div>
-              <span>kg</span>
-            </div>
-            <div id="dashboardPerformanceList" class="dashboard-performance-list"></div>
-          </article>
-
-          <article class="card dashboard-pro-card chart-card compact-chart-card">
-            <div class="card-head">
-              <div><h3>トレーニングボリューム</h3><span class="dashboard-card-sub">日別</span></div>
-              <span>kg</span>
-            </div>
-            <svg id="dashboardVolumeChart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg>
-          </article>
-        </div>
-
-        <div class="dashboard-pro-grid dashboard-pro-grid-bottom">
-          <article class="card dashboard-pro-card dashboard-recent-card">
-            <div class="card-head">
-              <div><h3>最新のトレーニング記録</h3><span class="dashboard-card-sub">直近6件</span></div>
-              <span id="dashboardRecentDate">—</span>
-            </div>
-            <div class="table-wrap dashboard-table-wrap">
-              <table class="dashboard-recent-table">
-                <thead><tr><th>日付</th><th>種目</th><th>トップセット</th><th>推定1RM</th><th>ボリューム</th></tr></thead>
-                <tbody id="dashboardRecentTraining"></tbody>
-              </table>
-            </div>
-          </article>
-
-          <article class="card dashboard-pro-card dashboard-condition-card">
-            <div class="card-head">
-              <div><h3>コンディションサマリー</h3><span class="dashboard-card-sub">直近7日平均</span></div>
-              <span>7 days</span>
-            </div>
-            <div id="dashboardConditionSummary" class="dashboard-condition-summary"></div>
-          </article>
-        </div>
-      </section>
-
 
       <section class="card progress-summary-card" id="progressSummary" data-section="dashboard">
         <div class="card-head"><h3>進捗サマリー</h3><span id="progressPeriodLabel">直近3ヶ月</span></div>
@@ -384,6 +310,6 @@
     </form>
   </dialog>
 
-  <script src="app.js?v=29-9-0826a"></script>
+  <script src="app.js?v=34-0826"></script>
 </body>
 </html>
