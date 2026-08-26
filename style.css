@@ -615,3 +615,63 @@ body:not(.clients-view) #clientListPanel{display:none!important}
   .charts-grid,.dashboard-charts{grid-template-columns:1fr!important}
   .progress-grid,.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
+
+
+/* ===== PT Analytics v32.0 — Pro iPad dashboard ===== */
+.ipad-dashboard-pro{display:grid;gap:14px;margin-bottom:16px}
+.dashboard-pro-grid{display:grid;gap:14px;min-width:0}
+.dashboard-pro-grid-two{grid-template-columns:1fr 1fr}
+.dashboard-pro-grid-three{grid-template-columns:1fr 1fr 1fr}
+.dashboard-pro-grid-bottom{grid-template-columns:minmax(0,1.65fr) minmax(300px,.85fr)}
+.dashboard-pro-card{min-width:0;overflow:hidden}
+.compact-chart-card{min-height:292px!important;padding:16px!important}
+.compact-chart-card svg{height:218px!important}
+.dashboard-card-sub{display:block!important;margin-top:3px;font-size:11px!important;color:var(--muted)!important}
+.dashboard-pro-kpi{min-height:98px;display:flex;flex-direction:column;justify-content:center}
+.dashboard-pro-kpi .value{font-size:25px!important;letter-spacing:-.02em}
+.kpi-topline{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.kpi-tag{font-size:8px;font-weight:800;letter-spacing:.08em;color:#8fa0b6;background:#f2f6fb;border:1px solid #e5edf6;padding:3px 5px;border-radius:999px}
+.dashboard-performance-list{display:grid;gap:0;margin-top:5px}
+.dashboard-performance-row{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(100px,.9fr) 74px;gap:8px;align-items:center;padding:11px 2px;border-bottom:1px solid var(--line)}
+.dashboard-performance-row:last-child{border-bottom:0}
+.dashboard-performance-row>div:first-child{min-width:0}
+.dashboard-performance-row strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dashboard-performance-row span{display:block;color:var(--muted);font-size:9px;margin-top:2px}
+.dashboard-performance-main{font-size:11px;font-weight:700;white-space:nowrap}
+.dashboard-performance-orm{text-align:right;font-size:12px;font-weight:800;color:var(--blue)}
+.dashboard-recent-card,.dashboard-condition-card{padding:16px}
+.dashboard-table-wrap{padding:0!important;overflow:auto}
+.dashboard-recent-table{font-size:11px}
+.dashboard-recent-table th,.dashboard-recent-table td{padding:10px 7px!important;white-space:nowrap}
+.dashboard-condition-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.dashboard-condition-item{border:1px solid var(--line);border-radius:13px;padding:13px 12px;background:#fbfdff;min-height:96px;display:grid;align-content:center}
+.dashboard-condition-icon{font-size:20px}
+.dashboard-condition-label{font-size:10px;color:var(--muted);margin:4px 0}
+.dashboard-condition-item strong{font-size:19px}
+#ipadDashboardPro .chart-axis-value{font-size:10px}
+
+/* On iPad dashboard, prioritize the new high-density control center. */
+@media (min-width:834px) and (max-width:1366px){
+  body:not(.clients-view) #kpiGrid[data-section="dashboard"]{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+  #ipadDashboardPro{display:grid!important}
+  #previousTrainingCard[data-section="dashboard"],
+  #comparisonStrip[data-section="dashboard"],
+  #progressSummary[data-section="dashboard"]{display:none!important}
+}
+@media (min-width:834px) and (max-width:1100px){
+  .dashboard-pro-grid-three{grid-template-columns:1fr 1fr}
+  .dashboard-pro-grid-three>article:last-child{grid-column:1/-1}
+  .dashboard-pro-grid-bottom{grid-template-columns:1fr}
+  body:not(.clients-view) #kpiGrid[data-section="dashboard"]{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media (min-width:768px) and (max-width:833px){
+  .dashboard-pro-grid-two,.dashboard-pro-grid-three,.dashboard-pro-grid-bottom{grid-template-columns:1fr}
+  #ipadDashboardPro{display:grid!important}
+}
+/* iPhone keeps the simpler existing dashboard. */
+@media (max-width:767px){
+  #ipadDashboardPro{display:none!important}
+}
