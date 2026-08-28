@@ -893,10 +893,12 @@ function dashboardDrawLine(id,data,unit=''){
   const clean=data.map(x=>({date:x.date,value:Number(x.value)})).filter(x=>Number.isFinite(x.value));
   if(!clean.length)return emptyChart(s);
 
-  const W=700,H=220,pL=52,pR=14,pT=16,pB=30;
+  const W=700,H=220,pL=52,pR=18,pT=27,pB=30;
   const vals=clean.map(x=>x.value);
   let min=Math.min(...vals),max=Math.max(...vals);
   if(min===max){min-=1;max+=1}
+  const pad=(max-min)*0.12 || 1;
+  min-=pad; max+=pad;
   const span=max-min||1;
   const x=i=>clean.length===1?(pL+(W-pL-pR)/2):pL+(W-pL-pR)*(i/(clean.length-1));
   const y=v=>pT+(H-pT-pB)*(1-(v-min)/span);
@@ -913,7 +915,35 @@ function dashboardDrawLine(id,data,unit=''){
 
   const d=clean.map((v,i)=>(i?'L':'M')+x(i)+' '+y(v.value)).join(' ');
   s.appendChild(svgEl('path',{d,class:'line'}));
-  clean.forEach((v,i)=>s.appendChild(svgEl('circle',{cx:x(i),cy:y(v.value),r:3.4,class:'point'})));
+
+  clean.forEach((v,i)=>{
+    const latest=i===clean.length-1;
+    const cx=x(i),cy=y(v.value);
+    s.appendChild(svgEl('circle',{
+      cx,cy,r:latest?5:3.4,class:'point'+(latest?' latest-chart-point':'')
+    }));
+
+    // data label: alternate above/below if nearby points could collide
+    let ly=cy-(i%2===0?10:12);
+    if(ly<12) ly=cy+18;
+    const anchor=i===0?'start':(i===clean.length-1?'end':'middle');
+    let lx=cx;
+    if(i===0) lx+=2;
+    if(i===clean.length-1) lx-=2;
+
+    const label=svgEl('text',{
+      x:lx,y:ly,
+      class:'chart-point-value'+(latest?' latest-chart-value':''),
+      'text-anchor':anchor
+    });
+    const valueText=unit==='kg'
+      ? `${Number(v.value).toFixed(1)}kg`
+      : unit==='L'
+        ? `${Number(v.value).toFixed(1)}L`
+        : `${Math.round(Number(v.value)*10)/10}${unit||''}`;
+    label.textContent=valueText;
+    s.appendChild(label);
+  });
 
   const maxLabels=6;
   const step=Math.max(1,Math.ceil(clean.length/maxLabels));
@@ -933,7 +963,7 @@ function dashboardDrawBars(id,data){
   const clean=data.map(x=>({date:x.date,value:Number(x.value)})).filter(x=>Number.isFinite(x.value));
   if(!clean.length)return emptyChart(s);
 
-  const W=700,H=220,pL=52,pR=14,pT=16,pB=30;
+  const W=700,H=220,pL=52,pR=14,pT=30,pB=30;
   const max=Math.max(...clean.map(x=>x.value),1);
   const x=i=>pL+(W-pL-pR)*((i+.5)/clean.length);
   const y=v=>pT+(H-pT-pB)*(1-v/max);
@@ -949,9 +979,15 @@ function dashboardDrawBars(id,data){
   });
 
   clean.forEach((v,i)=>{
+    const yy=y(v.value);
     s.appendChild(svgEl('rect',{
-      x:x(i)-bw/2,y:y(v.value),width:bw,height:(H-pB)-y(v.value),rx:3,class:'bar'
+      x:x(i)-bw/2,y:yy,width:bw,height:(H-pB)-yy,rx:3,class:'bar'
     }));
+    const label=svgEl('text',{
+      x:x(i),y:Math.max(13,yy-7),class:'chart-bar-value','text-anchor':'middle'
+    });
+    label.textContent=`${Math.round(v.value).toLocaleString()}kg`;
+    s.appendChild(label);
   });
 
   const maxLabels=5;
@@ -1009,6 +1045,21 @@ function renderIPadDashboard(trAll,bdAll){
 
   dashboardDrawBars('dashboardVolumeChart',groupVolumeByDate(trAll).slice(-10));
 
+  const latestRows=[...trAll].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  const latestDate=document.getElementById('dashboardLatestTrainingDate');
+  if(latestDate)latestDate.textContent=latestRows[0]?.date||'—';
+  const tbody=document.getElementById('dashboardLatestTraining');
+  if(tbody){
+    tbody.innerHTML=latestRows.length?latestRows.map(r=>{
+      const top=recordTopSet(r);
+      return `<tr>
+        <td>${r.date.slice(5).replace('-','/')}</td>
+        <td><strong>${esc(r.exercise)}</strong></td>
+        <td>${n(top.weight)}kg × ${Math.round(top.reps)}回</td>
+        <td>${n(recordBest1RM(r))}kg</td>
+      </tr>`;
+    }).join(''):'<tr><td colspan="4">トレーニングを入力すると表示されます</td></tr>';
+  }
 
   const last7=bdAll.slice(-7);
   const cond=document.getElementById('dashboardConditionMini');
@@ -1057,6 +1108,7 @@ function render(){
       const s=document.getElementById(id);if(s){s.innerHTML='';emptyChart(s)}
     });
     const dp=document.getElementById('dashboardPerformanceList');if(dp)dp.innerHTML='<div class="empty-state">クライアントを登録してください</div>';
+    const dl=document.getElementById('dashboardLatestTraining');if(dl)dl.innerHTML='<tr><td colspan="4">クライアントを登録してください</td></tr>';
     const dc=document.getElementById('dashboardConditionMini');if(dc)dc.innerHTML='';
     cleanDashboardVolumeUI();
     removeEstimated1RmBestUi();
@@ -1087,14 +1139,13 @@ function render(){
   const best=trAll.length?Math.max(...trAll.map(x=>recordBest1RM(x))):null;
   const latestTrainingDate=trAll.length?[...trAll].sort((a,b)=>a.date.localeCompare(b.date)).at(-1).date:'';
   const dailyVol=latestTrainingDate?trAll.filter(x=>x.date===latestTrainingDate).reduce((s,x)=>s+trainingVolume(x),0):0;
-  const latestSteps=latest(bdAll,'steps');
-  const latestCondition=latest(bdAll,'condition');
+  const lastSteps=latest(bdAll,'steps'),lastCondition=latest(bdAll,'condition');
   const kpis=[
     ['最新体重',lastW==null?'—':n(lastW)+' kg'],
     ['水分量',lastWater==null?'—':n(lastWater)+' L'],
     ['睡眠',lastSleep==null?'—':n(lastSleep)+' h'],
-    ['歩数',latestSteps==null?'—':Math.round(latestSteps).toLocaleString()+' 歩'],
-    ['体調',latestCondition==null?'—':n(latestCondition)+' / 10'],
+    ['歩数',lastSteps==null?'—':Math.round(lastSteps).toLocaleString()+' 歩'],
+    ['体調',lastCondition==null?'—':n(lastCondition)+'/10'],
   ];
   document.getElementById('kpiGrid').innerHTML=kpis.map(x=>`<article class="card kpi"><div class="label">${x[0]}</div><div class="value">${x[1]}</div></article>`).join('');
 
