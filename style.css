@@ -651,3 +651,181 @@ body:not(.clients-view) #clientListPanel{display:none!important}
 @media (max-width:767px){
   #ipadDashboardSection{display:none!important}
 }
+
+
+/* ===== PT Analytics v36.0 — clean one-screen iPad dashboard ===== */
+
+/* These dashboard modules are intentionally retired in v36. */
+#previousTrainingCard[data-section="dashboard"],
+#progressSummary[data-section="dashboard"],
+.progress-summary-card[data-section="dashboard"],
+#comparisonStrip[data-section="dashboard"]{
+  display:none!important;
+}
+
+/* Latest training table was retired; bottom row is condition only. */
+.ipad-dashboard-row-bottom{
+  grid-template-columns:1fr!important;
+}
+
+/* Keep normal scrolling everywhere outside the compact landscape dashboard. */
+html,body{
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+}
+
+@media (min-width:1024px) and (max-width:1366px) and (orientation:landscape){
+  main{
+    padding:7px 10px 10px!important;
+  }
+
+  .view-heading{
+    margin:0 0 4px!important;
+  }
+  .view-heading .eyebrow{
+    font-size:7px!important;
+    line-height:1!important;
+    margin-bottom:1px!important;
+  }
+  .view-heading h2{
+    font-size:17px!important;
+    line-height:1!important;
+  }
+  .view-client-name{
+    font-size:12px!important;
+  }
+
+  /* 5 compact body/lifestyle KPI cards */
+  #kpiGrid[data-section="dashboard"]{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:5px!important;
+    margin:0 0 5px!important;
+  }
+  #kpiGrid .kpi{
+    min-height:50px!important;
+    padding:6px 7px!important;
+    border-radius:9px!important;
+  }
+  #kpiGrid .kpi .label{
+    font-size:7px!important;
+    margin-bottom:2px!important;
+  }
+  #kpiGrid .kpi .value{
+    font-size:15px!important;
+    line-height:1!important;
+    margin:2px 0 0!important;
+  }
+
+  .ipad-dashboard-section{
+    gap:5px!important;
+    margin:0!important;
+  }
+  .ipad-dashboard-row{
+    gap:5px!important;
+  }
+
+  /* Top: weight + water */
+  .ipad-dashboard-row-two .ipad-dashboard-card{
+    min-height:0!important;
+    height:170px!important;
+  }
+
+  /* Middle: e1RM + performance + volume */
+  .ipad-dashboard-row-three .ipad-dashboard-card{
+    min-height:0!important;
+    height:164px!important;
+  }
+
+  /* Bottom: condition summary only */
+  .ipad-dashboard-row-bottom .ipad-dashboard-card{
+    min-height:0!important;
+    height:88px!important;
+  }
+
+  .ipad-dashboard-card{
+    padding:6px 7px!important;
+    border-radius:9px!important;
+  }
+  .ipad-dashboard-card .card-head{
+    min-height:20px!important;
+    height:20px!important;
+    margin:0 0 2px!important;
+  }
+  .ipad-dashboard-card .card-head h3{
+    font-size:9px!important;
+    line-height:1!important;
+  }
+  .ipad-dashboard-card .card-head small{
+    font-size:6px!important;
+    line-height:1!important;
+    margin-top:1px!important;
+  }
+  .ipad-dashboard-card .card-head>span{
+    font-size:7px!important;
+  }
+
+  .ipad-dashboard-row-two .ipad-dashboard-card svg{
+    height:136px!important;
+  }
+  .ipad-dashboard-row-three .ipad-dashboard-card svg{
+    height:130px!important;
+  }
+
+  .dashboard-performance-row{
+    grid-template-columns:minmax(0,1.15fr) minmax(78px,.85fr) 56px!important;
+    gap:4px!important;
+    padding:4px 1px!important;
+    font-size:7px!important;
+  }
+  .dashboard-performance-name strong{
+    font-size:8px!important;
+  }
+  .dashboard-performance-name small{
+    font-size:5px!important;
+  }
+  .dashboard-performance-row b{
+    font-size:7px!important;
+  }
+
+  .dashboard-condition-mini{
+    grid-template-columns:repeat(4,1fr)!important;
+    gap:4px!important;
+    margin-top:2px!important;
+  }
+  .dashboard-condition-mini-item{
+    min-height:50px!important;
+    padding:4px 6px!important;
+    border-radius:7px!important;
+  }
+  .dashboard-condition-mini-item span{
+    font-size:11px!important;
+  }
+  .dashboard-condition-mini-item small{
+    font-size:6px!important;
+  }
+  .dashboard-condition-mini-item strong{
+    font-size:10px!important;
+  }
+}
+
+/* Extra compression for 11-inch iPad landscape / Safari chrome. */
+@media (min-width:1024px) and (max-height:850px) and (orientation:landscape){
+  #kpiGrid .kpi{
+    min-height:45px!important;
+  }
+  .ipad-dashboard-row-two .ipad-dashboard-card{
+    height:150px!important;
+  }
+  .ipad-dashboard-row-three .ipad-dashboard-card{
+    height:145px!important;
+  }
+  .ipad-dashboard-row-bottom .ipad-dashboard-card{
+    height:78px!important;
+  }
+  .ipad-dashboard-row-two .ipad-dashboard-card svg{
+    height:117px!important;
+  }
+  .ipad-dashboard-row-three .ipad-dashboard-card svg{
+    height:112px!important;
+  }
+}

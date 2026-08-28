@@ -1009,21 +1009,6 @@ function renderIPadDashboard(trAll,bdAll){
 
   dashboardDrawBars('dashboardVolumeChart',groupVolumeByDate(trAll).slice(-10));
 
-  const latestRows=[...trAll].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-  const latestDate=document.getElementById('dashboardLatestTrainingDate');
-  if(latestDate)latestDate.textContent=latestRows[0]?.date||'—';
-  const tbody=document.getElementById('dashboardLatestTraining');
-  if(tbody){
-    tbody.innerHTML=latestRows.length?latestRows.map(r=>{
-      const top=recordTopSet(r);
-      return `<tr>
-        <td>${r.date.slice(5).replace('-','/')}</td>
-        <td><strong>${esc(r.exercise)}</strong></td>
-        <td>${n(top.weight)}kg × ${Math.round(top.reps)}回</td>
-        <td>${n(recordBest1RM(r))}kg</td>
-      </tr>`;
-    }).join(''):'<tr><td colspan="4">トレーニングを入力すると表示されます</td></tr>';
-  }
 
   const last7=bdAll.slice(-7);
   const cond=document.getElementById('dashboardConditionMini');
@@ -1072,7 +1057,6 @@ function render(){
       const s=document.getElementById(id);if(s){s.innerHTML='';emptyChart(s)}
     });
     const dp=document.getElementById('dashboardPerformanceList');if(dp)dp.innerHTML='<div class="empty-state">クライアントを登録してください</div>';
-    const dl=document.getElementById('dashboardLatestTraining');if(dl)dl.innerHTML='<tr><td colspan="4">クライアントを登録してください</td></tr>';
     const dc=document.getElementById('dashboardConditionMini');if(dc)dc.innerHTML='';
     cleanDashboardVolumeUI();
     removeEstimated1RmBestUi();
@@ -1103,17 +1087,14 @@ function render(){
   const best=trAll.length?Math.max(...trAll.map(x=>recordBest1RM(x))):null;
   const latestTrainingDate=trAll.length?[...trAll].sort((a,b)=>a.date.localeCompare(b.date)).at(-1).date:'';
   const dailyVol=latestTrainingDate?trAll.filter(x=>x.date===latestTrainingDate).reduce((s,x)=>s+trainingVolume(x),0):0;
-  const bench1rm=dashboardBest1RM(trAll,'ベンチプレス');
-  const squat1rm=dashboardBest1RM(trAll,'スクワット');
-  const monthKey=today().slice(0,7);
-  const monthTrainingDays=new Set(trAll.filter(x=>String(x.date).startsWith(monthKey)).map(x=>x.date)).size;
+  const latestSteps=latest(bdAll,'steps');
+  const latestCondition=latest(bdAll,'condition');
   const kpis=[
     ['最新体重',lastW==null?'—':n(lastW)+' kg'],
     ['水分量',lastWater==null?'—':n(lastWater)+' L'],
     ['睡眠',lastSleep==null?'—':n(lastSleep)+' h'],
-    ['ベンチ推定1RM',bench1rm==null?'—':n(bench1rm)+' kg'],
-    ['スクワット推定1RM',squat1rm==null?'—':n(squat1rm)+' kg'],
-    ['今月トレ日数',monthTrainingDays+' 日'],
+    ['歩数',latestSteps==null?'—':Math.round(latestSteps).toLocaleString()+' 歩'],
+    ['体調',latestCondition==null?'—':n(latestCondition)+' / 10'],
   ];
   document.getElementById('kpiGrid').innerHTML=kpis.map(x=>`<article class="card kpi"><div class="label">${x[0]}</div><div class="value">${x[1]}</div></article>`).join('');
 
